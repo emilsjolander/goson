@@ -127,7 +127,7 @@ Args is just an alias for map[string]interface{} and accepts almost anything as 
 Syntax
 ------
 Goson is a fairly powerfull templating language with support for everything you could want (Open a pull request if i've missed anything).
-//TODO
+`TODO`
 
 Contributing
 ------------
