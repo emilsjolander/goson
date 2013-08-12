@@ -1,9 +1,6 @@
 user: {
 	name: User.Name
 	repos: Repo in User.Repos {
-		name: Repo.Name
-		url: Repo.Url
-		stars: Repo.Stars
-		forks: Repo.Forks
+		include(repo, Repo)
 	}
 }
