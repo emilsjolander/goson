@@ -22,6 +22,8 @@ const TOKEN_ALIAS = 9       //token representing an alias/new variable declarati
 const TOKEN_LOOP = 10       //token representing a loop variable decleration
 const TOKEN_ARGUMENT = 11   //token representing a argument from the args hash
 
+var tokenCache = make(map[string][]token)
+
 func init() {
 	RegisterTokenPattern(TOKEN_COMMENT, "\\/\\/.*[\\n\\r]?")     //one line comment
 	RegisterTokenPattern(TOKEN_COMMENT, "\\/\\*[\\s\\S]*\\*\\/") //multi-line comment
@@ -39,12 +41,6 @@ func init() {
 }
 
 func Render(templateName string, args Args) (result []byte, err error) {
-	template, err := ioutil.ReadFile(templateName + ".goson")
-
-	//probably cannot find the template file
-	if err != nil {
-		return
-	}
 
 	//recover from any panics and return them are errors instead
 	defer func() {
@@ -58,13 +54,27 @@ func Render(templateName string, args Args) (result []byte, err error) {
 		}
 	}()
 
+	tokens, exists := tokenCache[templateName]
+
+	if !exists {
+		var template []byte
+		template, err = ioutil.ReadFile(templateName + ".goson")
+
+		//probably cannot find the template file
+		if err != nil {
+			return
+		}
+
+		tokens = Tokenize(template)
+		tokenCache[templateName] = tokens
+	}
+
 	lastPathSegmentStart := strings.LastIndex(templateName, "/")
 	var workingDir string
 	if lastPathSegmentStart >= 0 {
 		workingDir = templateName[0 : lastPathSegmentStart+1]
 	}
 
-	tokens := Tokenize(template)
 	p := &parser{workingDir: workingDir, tokens: tokens, args: args, result: []byte{'{'}}
 	p.parse()
 	result = append(p.result, '}')
