@@ -17,34 +17,34 @@ type parser struct {
 
 func (p *parser) parse() {
 	for p.position < len(p.tokens) {
-		tId := p.currentToken().id
-		switch tId {
-		case TOKEN_KEY:
+		tID := p.currentToken().id
+		switch tID {
+		case TokenKey:
 			p.parseKey()
-			tId = p.currentToken().id //parse key will have incremented p.position by one
-			switch tId {
-			case TOKEN_OPEN_BRACE:
+			tID = p.currentToken().id //parse key will have incremented p.position by one
+			switch tID {
+			case TokenOpenBrace:
 				p.parseObject()
-			case TOKEN_INT, TOKEN_BOOL, TOKEN_FLOAT, TOKEN_STRING:
+			case TokenInt, TokenBool, TokenFloat, TokenString:
 				p.parseValue()
-			case TOKEN_ALIAS:
+			case TokenAlias:
 				p.parseAlias()
-			case TOKEN_LOOP:
+			case TokenLoop:
 				p.parseLoop()
-			case TOKEN_ARGUMENT:
+			case TokenArgument:
 				p.parseArgument()
 			default:
 				panic(fmt.Sprintf("Syntax error: Unexpected token %s", p.currentToken().match))
 			}
-		case TOKEN_INCLUDE:
+		case TokenInclude:
 			p.parseInclude()
-		case TOKEN_COMMENT:
+		case TokenComment:
 			p.position++
 		default:
 			panic(fmt.Sprintf("Syntax error: Unexpected token %s", p.currentToken().match))
 		}
 		//add a comma if there are more tokens and the next token is not a comment
-		if p.position < len(p.tokens) && p.tokens[p.position].id != TOKEN_COMMENT {
+		if p.position < len(p.tokens) && p.tokens[p.position].id != TokenComment {
 			p.appendComma()
 		}
 	}
@@ -72,7 +72,7 @@ func (p *parser) parseValue() {
 }
 
 func (p *parser) parseAlias() {
-	if p.tokens[p.position+1].id != TOKEN_OPEN_BRACE {
+	if p.tokens[p.position+1].id != TokenOpenBrace {
 		panic("Syntax error: Expected opening brace after alias declaration")
 	}
 	//get the arguments of the alias
@@ -94,7 +94,7 @@ func (p *parser) parseAlias() {
 }
 
 func (p *parser) parseLoop() {
-	if p.tokens[p.position+1].id != TOKEN_OPEN_BRACE {
+	if p.tokens[p.position+1].id != TokenOpenBrace {
 		panic("Syntax error: Expected opening brace after loop declaration")
 	}
 	//get the arguments for the loop
@@ -149,11 +149,11 @@ func (p *parser) parseInclude() {
 		workingDir = templateName[0 : lastPathSegmentStart+1]
 	}
 
-	tokens := Tokenize(template)
+	tokens := tokenize(template)
 	args := explodeIntoArgs(objectForKey(p.args, bytes.Trim(params[1], " ")))
 	includeParser := &parser{workingDir: workingDir, tokens: tokens, args: args}
 	includeParser.parse()
-	p.appendJson(includeParser.result)
+	p.appendJSON(includeParser.result)
 	p.position++
 }
 
@@ -182,7 +182,7 @@ func (p *parser) appendObject(object []byte) {
 	p.result = append(p.result, object...)
 }
 
-func (p *parser) appendJson(json []byte) {
+func (p *parser) appendJSON(json []byte) {
 	p.result = append(p.result, json...)
 }
 
@@ -201,9 +201,9 @@ func (p *parser) appendArray(objects [][]byte) {
 func (p *parser) getScope() *parser {
 	braceCount := 1
 	for i, t := range p.tokens[p.position:] {
-		if t.id == TOKEN_OPEN_BRACE {
+		if t.id == TokenOpenBrace {
 			braceCount++
-		} else if t.id == TOKEN_CLOSE_BRACE {
+		} else if t.id == TokenCloseBrace {
 			braceCount--
 		}
 		if braceCount == 0 {

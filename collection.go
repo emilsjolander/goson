@@ -4,8 +4,12 @@ import (
 	"reflect"
 )
 
+//Collection is a interface you must abide by if you want the template to be able to apply
+//the looping construct on non-slice types.
 type Collection interface {
+	//Get the object at the given index
 	Get(index int) interface{}
+	//Len returns the length of collection
 	Len() int
 }
 

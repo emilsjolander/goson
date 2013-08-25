@@ -22,11 +22,11 @@ type token struct {
 	match []byte
 }
 
-func RegisterTokenPattern(id int, pattern string) {
+func registerTokenPattern(id int, pattern string) {
 	tokenPatterns = append(tokenPatterns, tokenPattern{id: id, pattern: regexp.MustCompile("^[" + whiteSpace + "]*" + pattern)})
 }
 
-func Tokenize(s []byte) (result []token) {
+func tokenize(s []byte) (result []token) {
 	//loop through the string until it is all tokenized
 	for !isEmpty(s) {
 		foundMatch := false
