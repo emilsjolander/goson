@@ -9,18 +9,20 @@ import (
 
 type Args map[string]interface{}
 
-const TOKEN_COMMENT = 0     //token a comment
-const TOKEN_OPEN_BRACE = 1  //token representing opening brace
-const TOKEN_CLOSE_BRACE = 2 //token representing closing brace
-const TOKEN_KEY = 3         //token representing a json key
-const TOKEN_STRING = 4      //token representing a string literal
-const TOKEN_FLOAT = 5       //token representing a float literal
-const TOKEN_INT = 6         //token representing a int literal
-const TOKEN_BOOL = 7        //token representing a bool literal
-const TOKEN_INCLUDE = 8     //token representing a bool literal
-const TOKEN_ALIAS = 9       //token representing an alias/new variable declaration
-const TOKEN_LOOP = 10       //token representing a loop variable decleration
-const TOKEN_ARGUMENT = 11   //token representing a argument from the args hash
+const (
+	TOKEN_COMMENT     = iota //token a comment
+	TOKEN_OPEN_BRACE  = iota //token representing opening brace
+	TOKEN_CLOSE_BRACE = iota //token representing closing brace
+	TOKEN_KEY         = iota //token representing a json key
+	TOKEN_STRING      = iota //token representing a string literal
+	TOKEN_FLOAT       = iota //token representing a float literal
+	TOKEN_INT         = iota //token representing a int literal
+	TOKEN_BOOL        = iota //token representing a bool literal
+	TOKEN_INCLUDE     = iota //token representing a bool literal
+	TOKEN_ALIAS       = iota //token representing an alias/new variable declaration
+	TOKEN_LOOP        = iota //token representing a loop variable decleration
+	TOKEN_ARGUMENT    = iota //token representing a argument from the args hash
+)
 
 var tokenCache = make(map[string][]token)
 
