@@ -71,7 +71,7 @@ func main() {
 ```
 The first thing we do in the above code is to import goson as well as the fmt packages. We also define 2 data types, User and Repo. These are the data types that we want to format into json. In the main function of our small sample we create an instance of User containing 3 instances of Repo. After this come the only public function of this library, the `Render()` function. `Render` takes two arguments, first the name of the template to render excluding the templates file type which should be `.goson`. The second argument to render is a map of argument that the tempate can make use of.
 
-Let's take a look as user.goson to see how we define out json structure.
+Let's take a look at user.goson to see how we define our json structure.
 ```text
 user: {
 	name: User.Name
@@ -112,19 +112,19 @@ The resulting json is the following:
     }
 }
 ```
-As you can see the result is automatically wrapped inside a json object. This is to follow standard restfull response formats.
+As you can see, the result is automatically wrapped inside a json object. This is to follow standard restful response formats.
 
 Why?
 ----
-You might ask why should i use this over Go's built in encoding/json package? That's a fair question, you might not have any need for goson. If you are building an API server you most likely have use for goson though. The json marshaler in encoding/json in both quick and fairly easy to use but it is not flexible or secure. By not being secure i mean that it is easy to leak private field when `encoding/json` uses a opt-out strategy for json fields. This is where goson comes into play!
+You might ask why should I use this over Go's built in encoding/json package? That's a fair question, you might not have any need for goson. If you are building an API server you most likely have use for goson though. The json marshaler in encoding/json in both quick and fairly easy to use but it is not flexible or secure. By not being secure I mean that it is easy to leak private field when `encoding/json` uses a opt-out strategy for json fields. This is where goson comes into play!
 
-Goson lets you render the same data type into different json output depending on the situation. You might have both a public and private API, in this case you could have a `templates/private/user.goson` and a `templates/public/user.goson` template, the public template might skip some internal fields as an auth token or perhaps the id of the user. One other time where goson is very usefull is in the above sample, To save space i might just want to render the url of the a repo when the user of the API GETs /user/1 but when they GET /user/1/repo/1 i will render all the info attached to the repo.
+Goson lets you render the same data type into different json output depending on the situation. You might have both a public and private API, in this case you could have a `templates/private/user.goson` and a `templates/public/user.goson` template, the public template might skip some internal fields as an auth token or perhaps the id of the user. One other time where goson is very useful is in the above sample, to save space I might just want to render the url of a repo when the user of the API GETs /user/1 but when they GET /user/1/repo/1 I will render all the info attached to the repo.
 
 Another reason to use goson is that it separates the view layer(json in this case) from the model layer. Defining the json keys within the model is against any good MVC design and should be avoided when possible.
 
 API
 ---
-As i hinted at during the getting started part of this readme, the API is very small. It consists of only one function and that is
+As I hinted at during the getting started part of this readme, the API is very small. It consists of only one function and that is
 ```go
 goson.Render(template string, args Args)
 ```
@@ -134,7 +134,7 @@ Args is just an alias for map[string]interface{} and accepts almost anything as 
 
 Syntax
 ------
-Goson is a fairly powerfull templating language with support for everything you could want (Open a pull request if i've missed anything).
+Goson is a fairly powerful templating language with support for everything you could want (Open a pull request if I've missed anything).
 
 define a json key the following way.
 ```text
@@ -171,7 +171,7 @@ my_array: o in Object.MyCollection {
 	key: o.value
 }
 ```
-`Object.MyCollection` can be an intance of either an `Array`, a `Slice` or a `goson.Collection`.
+`Object.MyCollection` can be an instance of either an `Array`, a `Slice` or a `goson.Collection`.
 
 A very important feature for larger applications is to write modular code. The include statement makes this possible.
 ```text
@@ -190,8 +190,11 @@ my_object: {
 Contributing
 ------------
 
-Pull requests and issues are very welcome! 
-If you want a fix to happen sooner than later i suggest you make a pull request. Please make pull request early, even before you are done with a feature/fix/enhancement. This way we can discuss and help each other out :)
+Pull requests and issues are very welcome!
+
+If you want a fix to happen sooner than later, I suggest that you make a pull request.
+
+Preferably send pull requests early, even before you are done with the feature/fix/enhancement. This way we can discuss and help each other out :)
 
 
 License
