@@ -18,7 +18,6 @@ type User struct {
 }
 
 func main() {
-
 	user := &User{
 		Name: "Emil Sjölander",
 		Repos: []Repo{
