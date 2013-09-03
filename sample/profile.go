@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
+	"github.com/davecheney/profile"
 	"github.com/emilsjolander/goson"
-	"net/http"
-	_ "net/http/pprof"
 )
 
 type Repo struct {
@@ -20,8 +18,9 @@ type User struct {
 }
 
 func main() {
-	go http.ListenAndServe(":6060", nil)
-	for {
+	defer profile.Start(profile.CPUProfile).Stop()
+
+	for i := 0; i < 100000; i++ {
 		user := &User{
 			Name: "Emil Sjölander",
 			Repos: []Repo{
