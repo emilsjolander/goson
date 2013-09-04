@@ -3,8 +3,6 @@ package goson
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
-	"strings"
 )
 
 type parser struct {
@@ -133,27 +131,24 @@ func (p *parser) parseArgument() {
 
 func (p *parser) parseInclude() {
 	statement := p.currentToken().match
-	params := bytes.Split(statement[8:len(statement)-1], []byte{','}) //strip away include() and split by comma
+
+	//strip away include() and split by comma
+	params := bytes.Split(statement[8:len(statement)-1], []byte{','})
+
+	//build the full path to the template name, allowing relative paths in templates
 	templateName := p.workingDir + string(bytes.Trim(params[0], " "))
 
-	template, err := ioutil.ReadFile(templateName + ".goson")
+	//get the arguments to be past into the template
+	args := explodeIntoArgs(objectForKey(p.args, bytes.Trim(params[1], " ")))
 
-	//probably cannot find the template file
+	//render the template
+	result, err := renderTemplate(templateName, args, false)
+
 	if err != nil {
 		panic(err)
 	}
 
-	lastPathSegmentStart := strings.LastIndex(templateName, "/")
-	var workingDir string
-	if lastPathSegmentStart >= 0 {
-		workingDir = templateName[0 : lastPathSegmentStart+1]
-	}
-
-	tokens := tokenize(template)
-	args := explodeIntoArgs(objectForKey(p.args, bytes.Trim(params[1], " ")))
-	includeParser := &parser{workingDir: workingDir, tokens: tokens, args: args}
-	includeParser.parse()
-	p.appendJSON(includeParser.result)
+	p.appendJSON(result)
 	p.position++
 }
 

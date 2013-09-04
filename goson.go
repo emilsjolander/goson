@@ -73,6 +73,11 @@ func Render(templateName string, args Args) (result []byte, err error) {
 		}
 	}()
 
+	result, err = renderTemplate(templateName, args, true)
+	return
+}
+
+func renderTemplate(templateName string, args Args, wrapInObject bool) (result []byte, err error) {
 	tokens, exists := tokenCache[templateName]
 
 	if !exists {
@@ -94,8 +99,14 @@ func Render(templateName string, args Args) (result []byte, err error) {
 		workingDir = templateName[0 : lastPathSegmentStart+1]
 	}
 
-	p := &parser{workingDir: workingDir, tokens: tokens, args: args, result: []byte{'{'}}
-	p.parse()
-	result = append(p.result, '}')
+	if wrapInObject {
+		p := &parser{workingDir: workingDir, tokens: tokens, args: args, result: []byte{'{'}}
+		p.parse()
+		result = append(p.result, '}')
+	} else {
+		p := &parser{workingDir: workingDir, tokens: tokens, args: args}
+		p.parse()
+		result = p.result
+	}
 	return
 }
