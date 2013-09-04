@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/davecheney/profile"
 	"github.com/emilsjolander/goson"
+	"os"
 )
 
 type Repo struct {
@@ -18,7 +20,18 @@ type User struct {
 }
 
 func main() {
-	defer profile.Start(profile.CPUProfile).Stop()
+	profileKind := os.Args[1]
+	switch profileKind {
+	case "cpu":
+		defer profile.Start(profile.CPUProfile).Stop()
+	case "mem":
+		defer profile.Start(profile.MemProfile).Stop()
+	case "block":
+		defer profile.Start(profile.BlockProfile).Stop()
+	default:
+		fmt.Println("only cpu, mem and block are valid profile arguments")
+		return
+	}
 
 	for i := 0; i < 100000; i++ {
 		user := &User{
