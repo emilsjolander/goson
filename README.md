@@ -114,14 +114,6 @@ The resulting json is the following:
 ```
 As you can see, the result is automatically wrapped inside a json object. This is to follow standard restful response formats.
 
-Why?
-----
-You might ask why should I use this over Go's built in encoding/json package? That's a fair question, you might not have any need for goson. If you are building an API server you most likely have use for goson though. The json marshaler in encoding/json in both quick and fairly easy to use but it is not flexible or secure. By not being secure I mean that it is easy to leak private field when `encoding/json` uses a opt-out strategy for json fields. This is where goson comes into play!
-
-Goson lets you render the same data type into different json output depending on the situation. You might have both a public and private API, in this case you could have a `templates/private/user.goson` and a `templates/public/user.goson` template, the public template might skip some internal fields as an auth token or perhaps the id of the user. One other time where goson is very useful is in the above sample, to save space I might just want to render the url of a repo when the user of the API GETs /user/1 but when they GET /user/1/repo/1 I will render all the info attached to the repo.
-
-Another reason to use goson is that it separates the view layer(json in this case) from the model layer. Defining the json keys within the model is against any good MVC design and should be avoided when possible.
-
 API
 ---
 As I hinted at during the getting started part of this readme, the API is very small. It consists of only one function and that is
@@ -186,6 +178,20 @@ my_object: {
 	my_key: MyObject.Key
 }
 ```
+
+Why?
+----
+You might ask why should I use this over Go's built in `encoding/json` package? That's a fair question, you might not have any need for goson. If you are building an API server you most likely have use for goson though. The json marshaler in `encoding/json` in both quick and fairly easy to use but it is not flexible or secure. By not being secure I mean that it is easy to leak private field when `encoding/json` uses a opt-out strategy for json fields. This is where goson comes into play!
+
+Goson lets you render the same data type into different json output depending on the situation. You might have both a public and private API, in this case you could have a `templates/private/user.goson` and a `templates/public/user.goson` template, the public template might skip some internal fields as an auth token or perhaps the id of the user. One other time where goson is very useful is in the above sample, to save space I might just want to render the url of a repo when the user of the API GETs /user/1 but when they GET /user/1/repo/1 I will render all the info attached to the repo.
+
+Another reason to use goson is that it separates the view layer(json in this case) from the model layer. Defining the json keys within the model is against any good MVC design and should be avoided when possible.
+
+Performance
+-----------
+Needing to parse a language and have a richer feature set than `encoding/json` does make goson slower, but not by a lot! The tokenization of templates is cached in an in memory cache the first time the template is used. This is done to avoid both regexp and io during any future renderings of that template. Because templates are often fairly small and reused via partials this caching will have close to no impact on the memory usage of your application. Adding caching of the tokenization phase has however increased the performance of goson with two orders of magnitude, even more on systems with relatively slow io. As of now `encoding/json` is about 4x faster than goson but that is minor considering that goson renders a normal sized json response in 0.05 milliseconds **on my machine**.
+
+**Benchmarks are comming**
 
 Contributing
 ------------

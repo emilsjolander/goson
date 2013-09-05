@@ -31,25 +31,21 @@ func objectForKey(args Args, key []byte) interface{} {
 	return nil
 }
 
-//uses getArg() but adds validation that the value is indeed a collection of the correct kind
+//uses getArg() but adds validation that the value is indeed a collection of some kind
 func collectionForKey(args Args, key []byte) Collection {
 	arg := getArg(args, key)
 	t := reflect.TypeOf(arg)
 	switch t.Kind() {
 	case reflect.Array, reflect.Slice:
-		if isTypeObject(t.Elem()) {
-			return &reflectArrayWrapper{value: reflect.ValueOf(arg)}
-		}
+		return &reflectArrayWrapper{value: reflect.ValueOf(arg)}
 	case reflect.Interface:
 		v := reflect.ValueOf(arg).Interface()
 		switch v := v.(type) {
 		case Collection:
-			if v.Len() == 0 || isTypeObject(reflect.TypeOf(v.Get(0))) {
-				return v
-			}
+			return v
 		}
 	}
-	panic("Argument error: Value was not of type array/slice/goson.Collection or did not contains one of struct/*struct/map[string]")
+	panic("Argument error: Value was not of type array/slice/goson.Collection")
 	return nil
 }
 

@@ -7,7 +7,7 @@ import (
 
 type Repo struct {
 	Name  string
-	URL   string
+	URLs  []string
 	Stars int
 	Forks int
 }
@@ -23,19 +23,19 @@ func main() {
 		Repos: []Repo{
 			Repo{
 				Name:  "goson",
-				URL:   "https://github.com/emilsjolander/goson",
+				URLs:  []string{"https://github.com/emilsjolander/goson"},
 				Stars: 0,
 				Forks: 0,
 			},
 			Repo{
 				Name:  "StickyListHeaders",
-				URL:   "https://github.com/emilsjolander/StickyListHeaders",
+				URLs:  []string{"https://github.com/emilsjolander/StickyListHeaders"},
 				Stars: 722,
 				Forks: 197,
 			},
 			Repo{
 				Name:  "android-FlipView",
-				URL:   "https://github.com/emilsjolander/android-FlipView",
+				URLs:  []string{"https://github.com/emilsjolander/android-FlipView"},
 				Stars: 157,
 				Forks: 47,
 			},

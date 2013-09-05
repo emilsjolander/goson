@@ -1,4 +1,6 @@
 name: Name
-url: URL
+urls: URL in URLs {
+	url: URL
+}
 stars: Stars
 forks: Forks
