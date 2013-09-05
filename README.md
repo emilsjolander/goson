@@ -42,20 +42,20 @@ func main() {
 			Repo{
 				Name:  "goson",
 				Url:   "https://github.com/emilsjolander/goson",
-				Stars: 0,
-				Forks: 0,
+				Stars: 69,
+				Forks: 1,
 			},
 			Repo{
 				Name:  "StickyListHeaders",
 				Url:   "https://github.com/emilsjolander/StickyListHeaders",
-				Stars: 722,
-				Forks: 197,
+				Stars: 772,
+				Forks: 227,
 			},
 			Repo{
 				Name:  "android-FlipView",
 				Url:   "https://github.com/emilsjolander/android-FlipView",
-				Stars: 157,
-				Forks: 47,
+				Stars: 170,
+				Forks: 52,
 			},
 		},
 	}
