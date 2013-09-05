@@ -189,9 +189,13 @@ Another reason to use goson is that it separates the view layer(json in this cas
 
 Performance
 -----------
-Needing to parse a language and have a richer feature set than `encoding/json` does make goson slower, but not by a lot! The tokenization of templates is cached in an in memory cache the first time the template is used. This is done to avoid both regexp and io during any future renderings of that template. Because templates are often fairly small and reused via partials this caching will have close to no impact on the memory usage of your application. Adding caching of the tokenization phase has however increased the performance of goson with two orders of magnitude, even more on systems with relatively slow io. As of now `encoding/json` is about 4x faster than goson but that is minor considering that goson renders a normal sized json response in 0.05 milliseconds *on my machine*.
+Needing to parse a language and have a richer feature set than `encoding/json` does make goson slower, but not by a lot! The tokenization of templates is cached in an in memory cache the first time the template is used. This is done to avoid both regexp and io during any future renderings of that template. Because templates are often fairly small and reused via partials this caching will have close to no impact on the memory usage of your application. Adding caching of the tokenization phase has however increased the performance of goson with two orders of magnitude, even more on systems with relatively slow io. As of now `encoding/json` is about 4x faster than goson but that is minor considering that goson renders a normal sized json response in less than a tenth on a millisecond on the machines i have testing it on.
 
-**Benchmarks are comming**
+Here you can see some benchmarks. These can be found in the goson/testing package.
+```
+BenchmarkGosonSerialization		50000	 30997 	ns/op
+BenchmarkStdlibSerialization	200000	 7698	ns/op
+```
 
 Contributing
 ------------
