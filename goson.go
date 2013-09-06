@@ -55,7 +55,7 @@ func init() {
 	registerTokenPattern(TokenInclude, "include\\( *[A-Za-z0-9_-]+ *, *[A-Za-z\\.]+ *\\)") //include(file_name, argument)
 	registerTokenPattern(TokenAlias, "[A-Za-z\\.]+ +as +[A-Za-z_]+")
 	registerTokenPattern(TokenLoop, "[A-Za-z_]+ +in +[A-Za-z\\.]+")
-	registerTokenPattern(TokenArgument, "[A-Za-z\\.]+")
+	registerTokenPattern(TokenArgument, "[A-Za-z0-9_\\-\\.]+")
 }
 
 // Render is the function that renders a struct or map with a given template.
