@@ -47,7 +47,7 @@ func init() {
 	registerTokenPattern(TokenComment, "\\/\\*[\\s\\S]*\\*\\/")
 	registerTokenPattern(TokenOpenBrace, "{")
 	registerTokenPattern(TokenCloseBrace, "}")
-	registerTokenPattern(TokenKey, "[A-Za-z_]+ *:")
+	registerTokenPattern(TokenKey, "[A-Za-z_0-9\\-&]+ *:")
 	registerTokenPattern(TokenString, "\".*\"")
 	registerTokenPattern(TokenFloat, "[0-9]+\\.[0-9]")
 	registerTokenPattern(TokenInt, "[0-9]+")
