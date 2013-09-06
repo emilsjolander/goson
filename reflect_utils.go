@@ -15,7 +15,7 @@ func valueForKey(args Args, key []byte) []byte {
 	case bool, int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64:
 		return []byte(fmt.Sprint(arg))
 	default:
-		panic(fmt.Sprintf("Argument error: Value was not of type string/int/uint/float/bool, was type %s", reflect.TypeOf(arg).Name()))
+		panic(fmt.Sprintf("Argument error: Value was not of type string/int/uint/float/bool, was type %s", reflect.TypeOf(arg)))
 	}
 	return nil
 }
@@ -27,7 +27,7 @@ func objectForKey(args Args, key []byte) interface{} {
 	if isTypeObject(t) {
 		return arg
 	}
-	panic(fmt.Sprintf("Argument error: Value was not of type struct/*struct/map[string], was type %s", t.Name()))
+	panic(fmt.Sprintf("Argument error: Value was not of type struct/*struct/map[string], was type %s", t))
 	return nil
 }
 
@@ -45,7 +45,7 @@ func collectionForKey(args Args, key []byte) Collection {
 			return v
 		}
 	}
-	panic(fmt.Sprintf("Argument error: Value was not of type array/slice/goson.Collection, was type %s", reflect.TypeOf(t).Name()))
+	panic(fmt.Sprintf("Argument error: Value was not of type array/slice/goson.Collection, was type %s", reflect.TypeOf(t)))
 	return nil
 }
 
@@ -84,37 +84,48 @@ func getArg(args Args, key []byte) interface{} {
 			panic(fmt.Sprintf("Argument error: %s not found in %s", expParts[i], expParts[i-1]))
 		}
 	}
+
+	if value.Kind() == reflect.Func {
+		value = getFuncSingleReturnValue(value)
+	}
+
 	return value.Interface()
 }
 
 //get the value with with the matching name inside v.
 //This value can be a struct field, a method attached to a struct or a value in a map
-func getReflectValue(v reflect.Value, valueName string) (reflect.Value, bool) {
-	value := reflect.Indirect(v).FieldByName(valueName)
-	if value.IsValid() {
-		if value.Kind() == reflect.Func {
-			value = getFuncSingleReturnValue(value)
-		}
-		return value, true
-	}
+func getReflectValue(v reflect.Value, valueName string) (value reflect.Value, ok bool) {
 
+	// first check if input was a map and handle that.
+	// otherwise input was a struct or pointer to a struct
 	if v.Kind() == reflect.Map {
 		value = v.MapIndex(reflect.ValueOf(valueName))
 		if value.IsValid() {
 			if value.Kind() == reflect.Func {
 				value = getFuncSingleReturnValue(value)
 			}
+			ok = true
 			return value, true
 		}
+	}
+
+	value = reflect.Indirect(v).FieldByName(valueName)
+	if value.IsValid() {
+		if value.Kind() == reflect.Func {
+			value = getFuncSingleReturnValue(value)
+		}
+		ok = true
+		return
 	}
 
 	value = v.MethodByName(valueName)
 	if value.IsValid() {
 		value = getFuncSingleReturnValue(value)
-		return value, true
+		ok = true
+		return
 	}
 
-	return reflect.Value{}, false
+	return
 }
 
 //take all of the field/methods/key-value pairs from val and add them as args. Valid input is struct, *struct and map[string]
@@ -143,7 +154,7 @@ func explodeIntoArgs(val interface{}) (args Args) {
 			panic("Maps used as arguments must have string keys")
 		}
 	default:
-		panic(fmt.Sprintf("Variables must be of type map or struct/*struct to be used as arguments, was type %s", reflect.TypeOf(t).Name()))
+		panic(fmt.Sprintf("Variables must be of type map or struct/*struct to be used as arguments, was type %s", reflect.TypeOf(t)))
 	}
 	return
 }
