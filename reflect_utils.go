@@ -15,7 +15,7 @@ func valueForKey(args Args, key []byte) []byte {
 	case bool, int, int8, int16, int32, int64, uint8, uint16, uint32, uint64, float32, float64:
 		return []byte(fmt.Sprint(arg))
 	default:
-		panic("Argument error: Value was not of type string/int/float/bool")
+		panic(fmt.Sprintf("Argument error: Value was not of type string/int/uint/float/bool, was type %s", reflect.TypeOf(arg).Name()))
 	}
 	return nil
 }
@@ -27,7 +27,7 @@ func objectForKey(args Args, key []byte) interface{} {
 	if isTypeObject(t) {
 		return arg
 	}
-	panic("Argument error: Value was not of type struct/*struct/map[string]")
+	panic(fmt.Sprintf("Argument error: Value was not of type struct/*struct/map[string], was type %s", t.Name()))
 	return nil
 }
 
@@ -45,7 +45,7 @@ func collectionForKey(args Args, key []byte) Collection {
 			return v
 		}
 	}
-	panic("Argument error: Value was not of type array/slice/goson.Collection")
+	panic(fmt.Sprintf("Argument error: Value was not of type array/slice/goson.Collection, was type %s", reflect.TypeOf(t).Name()))
 	return nil
 }
 
@@ -143,7 +143,7 @@ func explodeIntoArgs(val interface{}) (args Args) {
 			panic("Maps used as arguments must have string keys")
 		}
 	default:
-		panic("Variables must be of type map or struct/*struct to be used as arguments")
+		panic(fmt.Sprintf("Variables must be of type map or struct/*struct to be used as arguments, was type %s", reflect.TypeOf(t).Name()))
 	}
 	return
 }
