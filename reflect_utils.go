@@ -12,7 +12,7 @@ func valueForKey(args Args, key []byte) []byte {
 	switch arg := arg.(type) {
 	case string:
 		return quote([]byte(arg))
-	case bool, int, int8, int16, int32, int64, uint8, uint16, uint32, uint64, float32, float64:
+	case bool, int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64:
 		return []byte(fmt.Sprint(arg))
 	default:
 		panic(fmt.Sprintf("Argument error: Value was not of type string/int/uint/float/bool, was type %s", reflect.TypeOf(arg).Name()))
