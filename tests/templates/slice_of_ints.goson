@@ -1,0 +1,3 @@
+ints: int in Ints {
+	int: int
+}

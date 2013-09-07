@@ -1,0 +1,6 @@
+object: {
+	string: "hej"
+	int: 123
+	float: 1.23
+	bool: true
+}

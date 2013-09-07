@@ -1,0 +1,3 @@
+object: MyStruct.MyInnerStruct as struct {
+	string: struct.MyString
+}
