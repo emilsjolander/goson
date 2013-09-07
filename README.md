@@ -200,7 +200,7 @@ BenchmarkStdlibSerialization	200000	 7698	ns/op
 Contributing
 ------------
 
-Pull requests and issues are very welcome!
+Pull requests and issues are very welcome! Each pull request should come with a matching test for anything added to the library. If you make a pull request without running `go test` in the `goson/tests` i will give you a sad/angry smiley!
 
 If you want a fix to happen sooner than later, I suggest that you make a pull request.
 

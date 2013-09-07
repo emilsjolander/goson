@@ -55,18 +55,18 @@ func objectForKey(args Args, key []byte) interface{} {
 //uses getArg() but adds validation that the value is indeed a collection of some kind
 func collectionForKey(args Args, key []byte) Collection {
 	arg := getArg(args, key)
-	t := reflect.TypeOf(arg)
-	switch t.Kind() {
-	case reflect.Array, reflect.Slice:
-		return &reflectArrayWrapper{value: reflect.ValueOf(arg)}
-	case reflect.Interface:
-		v := reflect.ValueOf(arg).Interface()
-		switch v := v.(type) {
-		case Collection:
-			return v
+
+	switch arg := arg.(type) {
+	case Collection:
+		return arg
+	default:
+		switch reflect.TypeOf(arg).Kind() {
+		case reflect.Array, reflect.Slice:
+			return &reflectArrayWrapper{value: reflect.ValueOf(arg)}
 		}
 	}
-	panic(fmt.Sprintf("Argument error: Value was not of type array/slice/goson.Collection, was type %s", reflect.TypeOf(t)))
+
+	panic(fmt.Sprintf("Argument error: Value was not of type array/slice/goson.Collection, was type %s", reflect.TypeOf(arg)))
 	return nil
 }
 
