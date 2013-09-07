@@ -10,10 +10,31 @@ import (
 func valueForKey(args Args, key []byte) []byte {
 	arg := getArg(args, key)
 	switch arg := arg.(type) {
+	//handle primitives
 	case string:
 		return quote([]byte(arg))
 	case bool, int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64:
 		return []byte(fmt.Sprint(arg))
+	//handle primitive slices
+	case []string:
+		result := []byte{'['}
+		for i := 0; i < len(arg); i++ {
+			result = append(result, quote([]byte(arg[i]))...)
+			if i < len(arg)-1 {
+				result = append(result, ',')
+			}
+		}
+		return append(result, ']')
+	case []bool, []int, []int8, []int16, []int32, []int64, []uint, []uint8, []uint16, []uint32, []uint64, []float32, []float64:
+		result := []byte{'['}
+		argValue := reflect.ValueOf(arg)
+		for i := 0; i < argValue.Len(); i++ {
+			result = append(result, []byte(fmt.Sprint(argValue.Index(i).Interface()))...)
+			if i < argValue.Len()-1 {
+				result = append(result, ',')
+			}
+		}
+		return append(result, ']')
 	default:
 		panic(fmt.Sprintf("Argument error: Value was not of type string/int/uint/float/bool, was type %s", reflect.TypeOf(arg)))
 	}
