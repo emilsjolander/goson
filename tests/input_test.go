@@ -222,3 +222,30 @@ func TestJSONMarshaler(t *testing.T) {
 		t.Error("json did not match")
 	}
 }
+
+// Test rendering a json.Marshaler as struct field
+func TestJSONMarshalerStruct(t *testing.T) {
+	value := struct {
+		T *time.Time
+	}{
+		&time.Time{},
+	}
+	result, err := goson.Render("templates/marshaler_struct", goson.Args{"value": value})
+	if err != nil {
+		t.Error(err)
+	} else if string(result) != `{"s":{"json":"0001-01-01T00:00:00Z"}}` {
+		t.Error("json did not match")
+	}
+}
+
+// Test rendering a json.Marshaler within a slice
+func TestJSONMarshalerCollection(t *testing.T) {
+	v1 := []time.Time{time.Time{}}
+	v2 := []*time.Time{&time.Time{}}
+	result, err := goson.Render("templates/marshaler_collection", goson.Args{"v1": v1, "v2": v2})
+	if err != nil {
+		t.Error(err)
+	} else if string(result) != `{"v1":["0001-01-01T00:00:00Z"],"v2":["0001-01-01T00:00:00Z"]}` {
+		t.Error("json did not match")
+	}
+}
