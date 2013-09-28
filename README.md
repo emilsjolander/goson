@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/emilsjolander/goson.png)](https://travis-ci.org/emilsjolander/goson)
+
 Goson
 =====
 Goson is a small simple DSL for generating json from your Go datatypes. Supports both structs and maps as well as function/method values.
