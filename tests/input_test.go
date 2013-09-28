@@ -3,6 +3,7 @@ package tests
 import (
 	"github.com/emilsjolander/goson"
 	"testing"
+	"time"
 )
 
 // Test rendering a string passed to Args.
@@ -208,6 +209,16 @@ func TestCollection(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	} else if string(result) != "{\"ints\":[{\"int\":1},{\"int\":1},{\"int\":2},{\"int\":3},{\"int\":5},{\"int\":8}]}" {
+		t.Error("json did not match")
+	}
+}
+
+// Test rendering a json.Marshaler interface passed to Args
+func TestJSONMarshaler(t *testing.T) {
+	result, err := goson.Render("templates/marshaler", goson.Args{"marshaler": &time.Time{}})
+	if err != nil {
+		t.Error(err)
+	} else if string(result) != "{\"json\":\"0001-01-01T00:00:00Z\"}" {
 		t.Error("json did not match")
 	}
 }

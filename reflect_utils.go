@@ -1,6 +1,7 @@
 package goson
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
@@ -35,6 +36,12 @@ func valueForKey(args Args, key []byte) []byte {
 			}
 		}
 		return append(result, ']')
+	case json.Marshaler:
+		if raw, err := arg.MarshalJSON(); err != nil {
+			panic(fmt.Sprintf("JSON marshal error: %s", err))
+		} else {
+			return raw
+		}
 	default:
 		panic(fmt.Sprintf("Argument error: Value was not of type string/int/uint/float/bool, was type %s", reflect.TypeOf(arg)))
 	}
