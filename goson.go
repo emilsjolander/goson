@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"strings"
 )
 
 // Args is an alias for a map of strings -> anything.
@@ -53,7 +52,7 @@ func init() {
 	registerTokenPattern(TokenInt, "[0-9]+")
 	registerTokenPattern(TokenBool, "true|false")
 	//include(file_name, argument)
-	registerTokenPattern(TokenInclude, "include\\( *[A-Za-z0-9_-]+ *, *[A-Za-z0-9_\\-\\.]+ *\\)")
+	registerTokenPattern(TokenInclude, "include\\( *[A-Za-z0-9_-]+\\/?[A-Za-z0-9_-]+ *, *[A-Za-z0-9_\\-\\.]+ *\\)")
 	registerTokenPattern(TokenAlias, "[A-Za-z\\.]+ +as +[A-Za-z_]+")
 	registerTokenPattern(TokenLoop, "[A-Za-z_]+ +in +[A-Za-z\\.]+")
 	registerTokenPattern(TokenArgument, "[A-Za-z0-9_\\-\\.]+")
@@ -94,18 +93,12 @@ func renderTemplate(templateName string, args Args, wrapInObject bool) (result [
 		tokenCache[templateName] = tokens
 	}
 
-	lastPathSegmentStart := strings.LastIndex(templateName, "/")
-	var workingDir string
-	if lastPathSegmentStart >= 0 {
-		workingDir = templateName[0 : lastPathSegmentStart+1]
-	}
-
 	if wrapInObject {
-		p := &parser{workingDir: workingDir, tokens: tokens, args: args, result: []byte{'{'}}
+		p := &parser{tokens: tokens, args: args, result: []byte{'{'}}
 		p.parse()
 		result = append(p.result, '}')
 	} else {
-		p := &parser{workingDir: workingDir, tokens: tokens, args: args}
+		p := &parser{tokens: tokens, args: args}
 		p.parse()
 		result = p.result
 	}

@@ -1,2 +1,2 @@
 a_string: "rendering a include"
-include(included, MyStruct)
+include(templates/included, MyStruct)

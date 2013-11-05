@@ -6,11 +6,10 @@ import (
 )
 
 type parser struct {
-	workingDir string //the directory of the template. Used as root for include statements
-	tokens     []token
-	args       Args
-	position   int
-	result     []byte
+	tokens   []token
+	args     Args
+	position int
+	result   []byte
 }
 
 func (p *parser) parse() {
@@ -136,7 +135,7 @@ func (p *parser) parseInclude() {
 	params := bytes.Split(statement[8:len(statement)-1], []byte{','})
 
 	//build the full path to the template name, allowing relative paths in templates
-	templateName := p.workingDir + string(bytes.Trim(params[0], " "))
+	templateName := string(bytes.Trim(params[0], " "))
 
 	//get the arguments to be past into the template
 	args := explodeIntoArgs(objectForKey(p.args, bytes.Trim(params[1], " ")))
@@ -202,7 +201,7 @@ func (p *parser) getScope() *parser {
 			braceCount--
 		}
 		if braceCount == 0 {
-			return &parser{workingDir: p.workingDir, tokens: p.tokens[p.position : p.position+i], args: p.args}
+			return &parser{tokens: p.tokens[p.position : p.position+i], args: p.args}
 		}
 	}
 	panic("Syntax error: End of scope could not be found")

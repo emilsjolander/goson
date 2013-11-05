@@ -120,7 +120,7 @@ As I hinted at during the getting started part of this readme, the API is very s
 ```go
 goson.Render(template string, args Args)
 ```
-The template parameter should be the relative filepath to the template. So if you are executing main.go and your template is inside the templates folder you will want to pass `"templates/my_template"` to `Render()`. This will render the your data with the my_template.goson template which is located inside the template directory.
+The template parameter should be the relative filepath to the root of the project. So if you are executing main.go and your template is inside the templates folder you will want to pass `"templates/my_template"` to `Render()`. This will render the your data with the my_template.goson template which is located inside the template directory.
 
 Args is just an alias for map[string]interface{} and accepts almost anything as an argument. Complex numbers and channels are the two common data types not currently supported.
 
@@ -167,9 +167,9 @@ my_array: o in Object.MyCollection {
 
 A very important feature for larger applications is to write modular code. The include statement makes this possible.
 ```text
-include(template_name, MyObject.NestedObject)
+include(templates/template_name, MyObject.NestedObject)
 ```
-The above code will look for a template named "template_name.goson" in the same folder as the template that included it. `MyObject.NestedObject` is sent as a parameter to partial template. If `MyObject.NestedObject` has a field called `MyField` the partial template will refer to it via `MyField` and not `MyObject.NestedObject.MyField`. The argument (in this case `MyObject.NestedObject`) that is sent to the partial can be either a `struct`, a `*struct` or a `map[string]`.
+The above code will look for a template `templates/template_name.goson` relative to the root of the project. `MyObject.NestedObject` is sent as a parameter to partial template. If `MyObject.NestedObject` has a field called `MyField` the partial template will refer to it via `MyField` and not `MyObject.NestedObject.MyField`. The argument (in this case `MyObject.NestedObject`) that is sent to the partial can be either a `struct`, a `*struct` or a `map[string]`.
 
 Comments are also supported, both single and multi line comments. They follow the standard go syntax.
 ```text
