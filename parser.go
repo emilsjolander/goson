@@ -144,7 +144,7 @@ func (p *parser) parseInclude() {
 	args := Args{argNameParts[len(argNameParts)-1]: getArg(p.args, argName)}
 
 	//render the template
-	result, err := renderTemplate(templateName, args, false)
+	result, err := renderTemplate(TemplateRoot+templateName, args, false)
 
 	if err != nil {
 		panic(err)

@@ -38,6 +38,7 @@ const (
 )
 
 var tokenCache = make(map[string][]token)
+var TemplateRoot = "./"
 
 func init() {
 	//one line comment
@@ -73,7 +74,7 @@ func Render(templateName string, args Args) (result []byte, err error) {
 		}
 	}()
 
-	result, err = renderTemplate(templateName, args, true)
+	result, err = renderTemplate(TemplateRoot+templateName, args, true)
 	return
 }
 
