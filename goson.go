@@ -52,7 +52,7 @@ func init() {
 	registerTokenPattern(TokenInt, "[0-9]+")
 	registerTokenPattern(TokenBool, "true|false")
 	//include(file_name, argument)
-	registerTokenPattern(TokenInclude, "include\\( *[A-Za-z0-9_-]+\\/?[A-Za-z0-9_-]+ *, *[A-Za-z0-9_\\-\\.]+ *\\)")
+	registerTokenPattern(TokenInclude, "include\\( *([A-Za-z0-9_-]+\\/?)+ *, *[A-Za-z0-9_\\-\\.]+ *\\)")
 	registerTokenPattern(TokenAlias, "[A-Za-z\\.]+ +as +[A-Za-z_]+")
 	registerTokenPattern(TokenLoop, "[A-Za-z_]+ +in +[A-Za-z\\.]+")
 	registerTokenPattern(TokenArgument, "[A-Za-z0-9_\\-\\.]+")
