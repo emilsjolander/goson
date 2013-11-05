@@ -3,6 +3,7 @@ package goson
 import (
 	"bytes"
 	"fmt"
+	"strings"
 )
 
 type parser struct {
@@ -138,7 +139,9 @@ func (p *parser) parseInclude() {
 	templateName := string(bytes.Trim(params[0], " "))
 
 	//get the arguments to be past into the template
-	args := explodeIntoArgs(objectForKey(p.args, bytes.Trim(params[1], " ")))
+	argName := bytes.Trim(params[1], " ")
+	argNameParts := strings.Split(string(argName), ".")
+	args := Args{argNameParts[len(argNameParts)-1]: getArg(p.args, argName)}
 
 	//render the template
 	result, err := renderTemplate(templateName, args, false)

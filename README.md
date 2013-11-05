@@ -169,7 +169,7 @@ A very important feature for larger applications is to write modular code. The i
 ```text
 include(templates/template_name, MyObject.NestedObject)
 ```
-The above code will look for a template `templates/template_name.goson` relative to the root of the project. `MyObject.NestedObject` is sent as a parameter to partial template. If `MyObject.NestedObject` has a field called `MyField` the partial template will refer to it via `MyField` and not `MyObject.NestedObject.MyField`. The argument (in this case `MyObject.NestedObject`) that is sent to the partial can be either a `struct`, a `*struct` or a `map[string]`.
+The above code will look for a template `templates/template_name.goson` relative to the root of the project. `MyObject.NestedObject` is sent as a parameter to partial template. If `MyObject.NestedObject` has a field called `MyField` the partial template will refer to it via `NestedObject.MyField` and not `MyObject.NestedObject.MyField`. The argument (in this case `MyObject.NestedObject`) that is sent to the partial can be either a `struct`, a `*struct` or a `map[string]`.
 
 Comments are also supported, both single and multi line comments. They follow the standard go syntax.
 ```text

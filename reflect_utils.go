@@ -67,6 +67,7 @@ func isTypeObject(t reflect.Type) bool {
 func getArg(args Args, key []byte) interface{} {
 	expParts := strings.Split(string(key), ".")
 	rootValue, ok := args[expParts[0]]
+
 	if !ok {
 		panic(fmt.Sprintf("Argument error: %s not found", expParts[0]))
 	}
@@ -122,37 +123,6 @@ func getReflectValue(v reflect.Value, valueName string) (value reflect.Value, ok
 		return
 	}
 
-	return
-}
-
-//take all of the field/methods/key-value pairs from val and add them as args. Valid input is struct, *struct and map[string]
-func explodeIntoArgs(val interface{}) (args Args) {
-	v := reflect.Indirect(reflect.ValueOf(val))
-	t := v.Type()
-	if t.Kind() == reflect.Ptr {
-		t = t.Elem()
-	}
-	switch t.Kind() {
-	case reflect.Struct:
-		args = Args{}
-		for i := 0; i < t.NumField(); i++ {
-			args[t.Field(i).Name] = v.Field(i).Interface()
-		}
-		for i := 0; i < t.NumMethod(); i++ {
-			args[t.Method(i).Name] = v.Method(i).Interface()
-		}
-	case reflect.Map:
-		args = Args{}
-		if t.Key().Kind() == reflect.String {
-			for _, key := range v.MapKeys() {
-				args[key.String()] = v.MapIndex(key).Interface()
-			}
-		} else {
-			panic("Maps used as arguments must have string keys")
-		}
-	default:
-		panic(fmt.Sprintf("Variables must be of type map or struct/*struct to be used as arguments, was type %s", reflect.TypeOf(t)))
-	}
 	return
 }
 
