@@ -3,6 +3,7 @@ package goson
 import (
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 )
 
@@ -57,6 +58,14 @@ func init() {
 	registerTokenPattern(TokenAlias, "[A-Za-z\\.]+ +as +[A-Za-z_]+")
 	registerTokenPattern(TokenLoop, "[A-Za-z_]+ +in +[A-Za-z\\.]+")
 	registerTokenPattern(TokenArgument, "[A-Za-z0-9_\\-\\.]+")
+}
+
+func RenderTo(w io.Writer, templateName string, args Args) error {
+	result, err := Render(templateName, args)
+	if err != nil {
+		_, err = w.Write(result)
+	}
+	return err
 }
 
 // Render is the function that renders a struct or map with a given template.
