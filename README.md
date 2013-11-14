@@ -116,11 +116,12 @@ As you can see, the result is automatically wrapped inside a json object. This i
 
 API
 ---
-As I hinted at during the getting started part of this readme, the API is very small. It consists of only one function and that is
+As I hinted at during the getting started part of this readme, the API is very small. It consists of only two functions.
 ```go
 goson.Render(template string, args Args)
+goson.RenderTo(io.Writer, template string, args Args)
 ```
-The template parameter should be the relative filepath to the root of the project. So if you are executing main.go and your template is inside the templates folder you will want to pass `"templates/my_template"` to `Render()`. This will render the your data with the my_template.goson template which is located inside the template directory.
+`goson.RenderTo` is just a conveniance function for writing the result to a io.Writer. The template parameter should be the relative filepath to the root of the project. So if you are executing main.go and your template is inside the templates folder you will want to pass `"templates/my_template"` to `Render()`. This will render the your data with the my_template.goson template which is located inside the template directory.
 
 Args is just an alias for map[string]interface{} and accepts almost anything as an argument. Complex numbers and channels are the two common data types not currently supported.
 
