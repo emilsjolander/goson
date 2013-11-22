@@ -211,3 +211,11 @@ func TestCollection(t *testing.T) {
 		t.Error("json did not match")
 	}
 }
+
+// Test rendering to a non existing template and make sure an error is returned.
+func TestNoTemplate(t *testing.T) {
+	_, err := goson.Render("templates/this_is_not_a_template", goson.Args{"string": "a string"})
+	if err == nil {
+		t.Error("Template did not exist but Render method returned no error")
+	}
+}
