@@ -62,7 +62,7 @@ func init() {
 
 func RenderTo(w io.Writer, templateName string, args Args) error {
 	result, err := Render(templateName, args)
-	if err != nil {
+	if err == nil {
 		_, err = w.Write(result)
 	}
 	return err
