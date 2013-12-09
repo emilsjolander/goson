@@ -87,6 +87,15 @@ func Render(templateName string, args Args) (result []byte, err error) {
 	return
 }
 
+// Render but panic if error.
+func MustRender(templateName string, args Args) []byte {
+	result, err := Render(templateName, args)
+	if err != nil {
+		panic(err)
+	}
+	return result
+}
+
 func renderTemplate(templateName string, args Args, wrapInObject bool) (result []byte, err error) {
 	tokens, exists := tokenCache[templateName]
 
