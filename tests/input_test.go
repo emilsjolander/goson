@@ -1,8 +1,9 @@
 package tests
 
 import (
-	"github.com/emilsjolander/goson"
 	"testing"
+
+	"github.com/emilsjolander/goson"
 )
 
 // Test rendering a string passed to Args.
@@ -165,7 +166,7 @@ func TestSliceOfPrimitives(t *testing.T) {
 	}
 }
 
-// Test rendering a slice of primites passed as a json argument, should not be wrapped in json objects.
+// Test rendering a slice of primitives passed as a json argument, should not be wrapped in json objects.
 func TestSliceOfAnonymousPrimitives(t *testing.T) {
 	person := struct {
 		Name      string
@@ -217,5 +218,28 @@ func TestNoTemplate(t *testing.T) {
 	_, err := goson.Render("templates/this_is_not_a_template", goson.Args{"string": "a string"})
 	if err == nil {
 		t.Error("Template did not exist but Render method returned no error")
+	}
+}
+
+type Outer struct {
+	Inner
+}
+
+type Inner struct {
+	Property string
+}
+
+func (i *Inner) Method() string {
+	return "method"
+}
+
+// Test rendering methods and properties of a anonymous embedded struct
+func TestAnonymousEmbeddedStruct(t *testing.T) {
+	v := &Outer{Inner{Property: "property"}}
+	result, err := goson.Render("templates/anonymous_embedded_struct", goson.Args{"Outer": v})
+	if err != nil {
+		t.Error(err)
+	} else if string(result) != "{\"my_struct\":{\"property\":\"property\",\"method\":\"method\"}}" {
+		t.Error("json did not match")
 	}
 }
